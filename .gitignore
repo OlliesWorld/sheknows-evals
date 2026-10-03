@@ -1,0 +1,13 @@
+# The real SheKnows prompt. prompt.txt is the public summary.
+prompt.private*.txt
+
+# Raw promptfoo output. Every row embeds the full private prompt.
+results/*.json
+results/*.html
+
+# Secrets and local stuff
+.env
+.vscode/
+*.log
+node_modules/
+.DS_Store

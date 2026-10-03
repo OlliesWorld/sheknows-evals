@@ -1,0 +1,116 @@
+# SheKnows evals: does Google Search grounding actually help?
+# Run: npx promptfoo@latest eval   then   npx promptfoo@latest view
+
+description: SheKnows myth verdicts, grounded Gemini vs local models
+
+prompts:
+  - file://prompt.private.txt
+
+providers:
+  # 1. What the app uses today: Gemini with live Google Search.
+  #    Note: Gemini won't combine search grounding with forced JSON mode,
+  #    so this one relies on the prompt asking for JSON. The assertions
+  #    strip ```json fences and find the object anyway.
+  - id: google:gemini-2.5-flash
+    label: gemini-flash-grounded
+    config:
+      temperature: 0
+      tools:
+        - googleSearch: {}
+
+  # 2-4. Model comparison is done; results saved in results/baseline-v1.1.
+  #    From v1.1 on, only the production setup (above) is tested.
+  #    Uncomment to rerun the comparison.
+  #
+  # # 2. Same model, no search. This is the fair "how much does grounding help?" comparison.
+  # - id: google:gemini-2.5-flash
+  #   label: gemini-flash-no-search
+  #   config:
+  #     temperature: 0
+  #     generationConfig:
+  #       response_mime_type: application/json
+  #
+  # # 3 & 4. Local models through Ollama (no search, free, private).
+  # #    Sized for 16GB RAM. On 8GB, swap in llama3.2:3b and qwen3:4b.
+  # - id: ollama:chat:llama3.1:8b
+  #   label: llama-8b-local
+  #   config:
+  #     temperature: 0
+  #     format: json
+  #
+  # - id: ollama:chat:qwen3:8b
+  #   label: qwen-8b-local
+  #   config:
+  #     temperature: 0
+  #     think: false
+  #     format: json
+
+# One row per claim. Columns become {{claim}}, {{expected}}, {{notes}}.
+# Smoke test (8 rows: 5 opinions, rim, McIntosh, Messi). Switch to myths.csv for the full run.
+# tests: file://myths-smoke.csv
+tests: file://myths.csv
+
+defaultTest:
+  options:
+    # The judge for the tone check. Use a strong model, never one being tested locally.
+    provider: google:gemini-3.1-pro-preview
+  assert:
+    # Pass if the verdict is within one step of your label.
+    - type: javascript
+      value: file://assertions/verdict.js
+      metric: verdict
+
+    # Off: the real prompt doesn't ask for sources.
+    # # Did it give at least one real-looking source URL?
+    # - type: javascript
+    #   value: file://assertions/sources.js
+    #   metric: sources
+
+    # Opinion vs fact flag. On from v2 (the v1 prompt had no claim_type;
+    # to rerun v1, point prompts at prompt.private.v1.txt and comment this out).
+    - type: javascript
+      value: file://assertions/claim-type.js
+      metric: claim_type
+
+    # Made-up evidence, graded by the judge model. Catches right verdicts
+    # backed by invented stats, events, quotes, or citations.
+    # The judge gets today's date and Google Search so it doesn't fail recent
+    # facts it simply hasn't heard of. Still Gemini judging Gemini: spot-check failures.
+    - type: llm-rubric
+      metric: no_fabrication
+      provider:
+        id: google:gemini-3.1-pro-preview
+        config:
+          tools:
+            - googleSearch: {}
+      value: >-
+        Today's date is October 2, 2026. Events in 2025 and 2026 are in the past.
+        Claim: "{{claim}}". Use search to check every specific fact in the
+        explanation: numbers, dates, events, tournaments, studies, organizations,
+        and quotes. Fail only if a fact is wrong or can't be found anywhere
+        (for example a tournament year that didn't happen, or a statistic or
+        quote with no real source), even if the overall verdict is correct.
+        Do not fail a fact just because you didn't already know it.
+        Fail if it uses citation markers like "(1)" or "[2]" with no actual source.
+        Pass if every specific fact is accurate, or if the response is only an
+        off-topic refusal like {"error":"off_topic"}.
+
+    # Opinion handling, graded by the judge model. Applies to every row,
+    # but factual claims pass it automatically.
+    - type: llm-rubric
+      metric: opinion_handling
+      value: >-
+        Claim: "{{claim}}". If this claim is a matter of taste or a stereotype,
+        the explanation must say so plainly, then test any checkable factual part
+        with specific evidence, and must not pretend to measure the opinion itself.
+        If the claim is a plain factual claim, pass automatically.
+        If the output is an {"error": ...} object, PASS.
+
+    # Tone check: off since v1.1 (every model scored 1.00, so it told us nothing).
+    # - type: llm-rubric
+    #   metric: tone
+    #   value: >-
+    #     The analysis is confident and clear, backs its verdict with specifics,
+    #     and does not lecture, moralize, or sound preachy. Fail it if it hedges
+    #     so much that the reader can't tell what the verdict is.
+    #     If the output is an {"error": ...} object, PASS.

@@ -1,0 +1,21 @@
+Prompt kept private.
+
+Summary of what the production SheKnows prompt does:
+
+- Persona: a calm, confident women's sports expert who backs claims with data.
+- Scope: only claims about women's sports. Anything else (off-topic questions,
+  prompt-injection attempts, requests for personal data) returns
+  {"error":"off_topic"}.
+- Scoring: rates each claim 0-100 on four weighted dimensions: factual
+  accuracy, context, exaggeration, and representativeness. The app combines
+  them into a single truth percentage.
+- Opinions (v2): opinions, stereotypes, and comparisons about women's sports
+  are in scope. The model flags them with claim_type "opinion", says so in
+  the first sentence, and scores only the checkable factual part.
+- Output: strict JSON with claim_type, the four scores, a 2-4 sentence
+  explanation that cites specific numbers, and a confidence score.
+- The production app runs it on Gemini with Google Search grounding.
+
+The eval reads the real prompt from prompt.private.txt, which is gitignored.
+To run this repo yourself, write your own prompt there and put {{claim}} where
+the claim goes.

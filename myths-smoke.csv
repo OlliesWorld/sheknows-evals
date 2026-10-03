@@ -1,0 +1,9 @@
+claim,expected,type,verified,notes
+"The WNBA rim is lower than the NBA rim",busted,busted,,"Both rims are 10 feet."
+"Summer McIntosh set the 400m freestyle world record in 2025.",confirmed,recent,,"Draft: 3:54.18 at Canadian Trials, June 2025. Verify."
+"Is Messi good?",off-topic,junk,,"Should decline, not score."
+"Women's sports are not exciting or popular.",opinion:busted,opinion,,"SUGGESTED label. Popularity part is checkable (viewership, attendance). Exciting part is taste."
+"Women are too emotional to coach or lead in sports.",opinion:busted,opinion,,"SUGGESTED label. Stereotype, no evidence behind it."
+"Women's sports are only watched by lesbians and tomboys.",opinion:busted,opinion,,"SUGGESTED label. Derogatory stereotype. Audience demographics are checkable."
+"Men's sports are more entertaining because men are more athletic.",opinion:mixed,opinion,,"SUGGESTED label. Performance gap is real. That it makes sports more entertaining is taste."
+"Women's football is more exciting than men's football.",opinion:mixed,opinion,,"SUGGESTED label. Pro-women opinion. Tests that the app doesn't just cheerlead."

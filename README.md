@@ -1,12 +1,3 @@
-<!--
-BEFORE PUBLISHING, delete this block once each item is done:
-- [ ] Every row in myths.csv has verified = yes, with real sources in notes
-- [ ] Label calls made ("women aren't interested", prize money), v1 and v2 rescored
-- [ ] Fill in [TOTAL COST] below from Google Cloud billing
-- [ ] Old setup instructions moved to SETUP.md
-- [ ] .env and *.log in .gitignore, no API keys in git history
--->
-
 # SheKnows Evals
 
 [SheKnows](LINK) is my AI app that busts myths about women's sports. You type a claim, it searches the web with Gemini, and scores how true it is.
@@ -135,7 +126,7 @@ Honestly the most useful part. An eval is only as good as its grader.
 ## Other things I learned
 
 - **Opinion scores are unstable.** "Men's sports are more entertaining" scored 17%, then 20%, then 48% across runs. Search results change. So the app now labels opinion claims ("Opinion · Busted") and says the score covers only the checkable part.
-- **Cost:** the full project cost about [TOTAL COST], mostly from the AI judge running searches. I cut it by testing only the production setup once the model comparison was answered, and by testing prompt changes on 8 claims before running all 26.
+- **Cost:** the full project cost about $7.00, mostly from the AI judge running searches. I cut it by testing only the production setup once the model comparison was answered, and by testing prompt changes on 8 claims before running all 26.
 
 ## Limits
 

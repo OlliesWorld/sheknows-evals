@@ -1,6 +1,6 @@
 # SheKnows Evals
 
-[SheKnows](LINK) is my AI app that busts myths about women's sports. You type a claim, it searches the web with Gemini, and scores how true it is.
+[SheKnows](https://sheknows.olliesworld.xyz/) is my AI app that busts myths about women's sports. You type a claim, it searches the web with Gemini, and scores how true it is.
 
 It looked like it worked. I wanted to know if it actually did. So I built an eval.
 

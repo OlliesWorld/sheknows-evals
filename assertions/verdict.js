@@ -27,12 +27,16 @@ module.exports = (output, context) => {
 
   // The SheKnows prompt returns four sub-scores, not truthPct. Combine them with
   // the prompt's weights. >>> Check this matches the app's code. <<<
+  // Capped at factual_accuracy + 20, same as the app (src/pages/api/she-knows.ts).
   if (data && typeof data.truthPct !== 'number' && typeof data.factual_accuracy === 'number') {
-    data.truthPct = Math.round(
-      data.factual_accuracy * 0.4 +
-      (Number(data.context_score) || 0) * 0.25 +
-      (Number(data.exaggeration_score) || 0) * 0.25 +
-      (Number(data.representation_score) || 0) * 0.1
+    data.truthPct = Math.min(
+      Math.round(
+        data.factual_accuracy * 0.4 +
+        (Number(data.context_score) || 0) * 0.25 +
+        (Number(data.exaggeration_score) || 0) * 0.25 +
+        (Number(data.representation_score) || 0) * 0.1
+      ),
+      data.factual_accuracy + 20
     );
   }
 

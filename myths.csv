@@ -24,4 +24,4 @@ claim,expected,type,verified,notes
 "Women are too emotional to coach or lead in sports.",opinion:busted,opinion,,"SUGGESTED label. Stereotype, no evidence behind it."
 "Women's sports are only watched by lesbians and tomboys.",opinion:busted,opinion,,"SUGGESTED label. Derogatory stereotype. Audience demographics are checkable."
 "Men's sports are more entertaining because men are more athletic.",opinion:mixed,opinion,,"SUGGESTED label. Performance gap is real. That it makes sports more entertaining is taste."
-"Women's football is more exciting than men's football.",opinion:mixed,opinion,,"SUGGESTED label. Pro-women opinion. Tests that the app doesn't just cheerlead."
+"Women's football is more exciting than men's football.",opinion:none,opinion,,"SUGGESTED label. Pro-women opinion. Tests that the app doesn't just cheerlead."

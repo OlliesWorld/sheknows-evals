@@ -12,6 +12,10 @@ Summary of what the production SheKnows prompt does:
 - Opinions (v2): opinions, stereotypes, and comparisons about women's sports
   are in scope. The model flags them with claim_type "opinion", says so in
   the first sentence, and scores only the checkable factual part.
+- Pure-taste opinions (v3): if the claim has no checkable part at all (e.g.
+  "X is more exciting than Y"), all four scores and confidence are null
+  instead of guessed numbers. The explanation says it's a matter of taste and
+  gives context for both sides without picking a winner.
 - Output: strict JSON with claim_type, the four scores, a 2-4 sentence
   explanation that cites specific numbers, and a confidence score.
 - The production app runs it on Gemini with Google Search grounding.

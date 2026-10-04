@@ -25,6 +25,23 @@ module.exports = (output, context) => {
   if (want.startsWith('opinion:')) want = want.slice('opinion:'.length);
   const data = parseModelJson(output);
 
+  // Pure-taste opinions ("opinion:none") have no checkable part at all.
+  // The model must leave every score null instead of guessing a number.
+  if (want === 'none') {
+    if (!data) return { pass: false, score: 0, reason: 'Response was not valid JSON' };
+    const scoreFields = ['factual_accuracy', 'context_score', 'exaggeration_score', 'representation_score', 'confidence'];
+    const allNull = scoreFields.every((f) => data[f] === null);
+    return allNull
+      ? { pass: true, score: 1, reason: 'Correctly left all scores null — matter of taste' }
+      : {
+          pass: false,
+          score: 0,
+          reason: `Guessed numbers for a pure-taste claim instead of null: ${JSON.stringify(
+            Object.fromEntries(scoreFields.map((f) => [f, data[f]]))
+          )}`,
+        };
+  }
+
   // The SheKnows prompt returns four sub-scores, not truthPct. Combine them with
   // the prompt's weights. >>> Check this matches the app's code. <<<
   // Capped at factual_accuracy + 20, same as the app (src/pages/api/she-knows.ts).
